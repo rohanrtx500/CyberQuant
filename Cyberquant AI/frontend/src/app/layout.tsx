@@ -16,12 +16,31 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link
-          rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              tailwind.config = {
+                darkMode: 'class',
+                theme: {
+                  extend: {
+                    colors: {
+                      brand: {
+                        50: '#eff6ff',
+                        100: '#dbeafe',
+                        500: '#3b82f6',
+                        600: '#2563eb',
+                        700: '#1d4ed8'
+                      }
+                    }
+                  }
+                }
+              }
+            `,
+          }}
         />
       </head>
-      <body className="bg-gray-50 text-gray-900 min-h-screen flex antialiased">
+      <body className="text-slate-900 min-h-screen flex antialiased selection:bg-blue-200 selection:text-blue-900">
         <Sidebar />
         <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
           <Topbar />

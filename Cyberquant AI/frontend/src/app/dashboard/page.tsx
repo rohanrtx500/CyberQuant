@@ -44,10 +44,10 @@ export default function DashboardPage() {
   if (loading || !kpi || !distribution) {
     return (
       <div className="space-y-4">
-        <div className="h-6 w-64 bg-slate-200 animate-pulse rounded" />
+        <div className="h-6 w-64 bg-slate-200 dark:bg-slate-800 animate-pulse rounded" />
         <div className="grid grid-cols-5 gap-3.5">
           {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="h-24 bg-slate-200 animate-pulse rounded-lg" />
+            <div key={i} className="h-24 bg-slate-200 dark:bg-slate-800 animate-pulse rounded-lg" />
           ))}
         </div>
       </div>
@@ -59,14 +59,14 @@ export default function DashboardPage() {
       {/* Top Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-slate-900">Enterprise Cyber Risk Posture</h1>
-          <p className="text-xs text-slate-500">
+          <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100">Enterprise Cyber Risk Posture</h1>
+          <p className="text-xs text-slate-500 dark:text-slate-400">
             Continuous quantification translating technical threat signals into INR financial exposure.
           </p>
         </div>
-        <div className="flex items-center space-x-2 text-xs text-slate-600 bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-xs">
-          <ShieldCheck className="w-4 h-4 text-blue-600" />
-          <span>Active Asset Scope: <strong className="text-slate-900 font-mono">18 Production Systems</strong></span>
+        <div className="flex items-center space-x-2 text-xs text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 shadow-xs">
+          <ShieldCheck className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+          <span>Active Asset Scope: <strong className="text-slate-900 dark:text-slate-100 font-mono">18 Production Systems</strong></span>
         </div>
       </div>
 

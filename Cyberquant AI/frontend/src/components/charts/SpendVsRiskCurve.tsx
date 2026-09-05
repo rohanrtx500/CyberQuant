@@ -50,13 +50,13 @@ export function SpendVsRiskCurve({
   const currY = getY(46000000);
 
   return (
-    <div className="bg-white border border-slate-200/90 rounded-lg p-4 shadow-xs">
+    <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-lg p-4 shadow-xs">
       <div className="flex items-center justify-between mb-2">
         <div>
-          <div className="text-xs font-bold text-slate-800 tracking-tight">Investment vs. Risk Reduction Curve</div>
-          <div className="text-[11px] text-slate-500">Capital allocation efficiency demonstrating diminishing returns</div>
+          <div className="text-xs font-bold text-slate-800 dark:text-slate-100 tracking-tight">Investment vs. Risk Reduction Curve</div>
+          <div className="text-[11px] text-slate-500 dark:text-slate-400">Capital allocation efficiency demonstrating diminishing returns</div>
         </div>
-        <span className="text-[10px] font-semibold bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded border border-emerald-200">
+        <span className="text-[10px] font-semibold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800">
           Optimal Zone: ₹80L – ₹1.2 Cr
         </span>
       </div>
@@ -68,12 +68,12 @@ export function SpendVsRiskCurve({
           y={paddingTop}
           width={zoneX2 - zoneX1}
           height={chartH}
-          fill="#eff6ff"
-          opacity="0.8"
-          stroke="#bfdbfe"
+          fill="#3b82f6"
+          opacity="0.12"
+          stroke="#60a5fa"
           strokeDasharray="2 2"
         />
-        <text x={(zoneX1 + zoneX2) / 2} y={paddingTop + 14} textAnchor="middle" className="text-[9px] fill-blue-600 font-semibold">
+        <text x={(zoneX1 + zoneX2) / 2} y={paddingTop + 14} textAnchor="middle" className="text-[9px] fill-blue-600 dark:fill-blue-400 font-semibold">
           Recommended Spend Zone
         </text>
 
@@ -83,7 +83,7 @@ export function SpendVsRiskCurve({
           const val = maxReduction * pct;
           return (
             <g key={idx}>
-              <line x1={paddingLeft} y1={y} x2={width - paddingRight} y2={y} stroke="#f1f5f9" strokeWidth="1" />
+              <line x1={paddingLeft} y1={y} x2={width - paddingRight} y2={y} stroke="#334155" strokeWidth="0.5" strokeDasharray="2 2" className="opacity-20 dark:opacity-40" />
               <text x={paddingLeft - 6} y={y + 3} textAnchor="end" className="text-[9px] fill-slate-400 font-mono">
                 {formatINR(val)}
               </text>
@@ -95,10 +95,10 @@ export function SpendVsRiskCurve({
         <path d={pathD} fill="none" stroke="#2563eb" strokeWidth="2.5" strokeLinecap="round" />
 
         {/* Current Recommended Spend Point */}
-        <circle cx={currX} cy={currY} r="5" fill="#1d4ed8" stroke="#ffffff" strokeWidth="2" />
-        <line x1={currX} y1={currY} x2={currX} y2={paddingTop + chartH} stroke="#1d4ed8" strokeDasharray="3 2" />
+        <circle cx={currX} cy={currY} r="5" fill="#3b82f6" stroke="#ffffff" strokeWidth="2" />
+        <line x1={currX} y1={currY} x2={currX} y2={paddingTop + chartH} stroke="#3b82f6" strokeDasharray="3 2" />
 
-        <text x={currX} y={currY - 8} textAnchor="middle" className="text-[9px] fill-blue-900 font-bold">
+        <text x={currX} y={currY - 8} textAnchor="middle" className="text-[9px] fill-blue-900 dark:fill-blue-200 font-bold">
           Selected Spend (₹96L)
         </text>
 

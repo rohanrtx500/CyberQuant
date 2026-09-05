@@ -46,23 +46,23 @@ export function FinancialTrendChart({
   const toleranceY = getY(70000000); // ₹7.00 Cr Board Tolerance
 
   return (
-    <div className="bg-white border border-slate-200/90 rounded-lg p-4 shadow-xs">
+    <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-lg p-4 shadow-xs">
       {/* Header with 30/60/90 day buttons */}
       <div className="flex items-center justify-between mb-3">
         <div>
-          <div className="text-xs font-bold text-slate-800 tracking-tight">Financial Risk Trend</div>
-          <div className="text-[11px] text-slate-500">Gross monetary exposure vs. Expected Annual Loss (EAL)</div>
+          <div className="text-xs font-bold text-slate-800 dark:text-slate-100 tracking-tight">Financial Risk Trend</div>
+          <div className="text-[11px] text-slate-500 dark:text-slate-400">Gross monetary exposure vs. Expected Annual Loss (EAL)</div>
         </div>
 
-        <div className="flex items-center space-x-1 bg-slate-100 p-0.5 rounded border border-slate-200">
+        <div className="flex items-center space-x-1 bg-slate-100 dark:bg-slate-800 p-0.5 rounded border border-slate-200 dark:border-slate-700">
           {[30, 60, 90].map((days) => (
             <button
               key={days}
               onClick={() => onRangeChange(days)}
               className={`px-2 py-0.5 text-[11px] font-medium rounded transition ${
                 selectedRange === days
-                  ? "bg-white text-slate-900 shadow-xs font-semibold"
-                  : "text-slate-600 hover:text-slate-900"
+                  ? "bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 shadow-xs font-semibold"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
               }`}
             >
               {days}d
@@ -80,7 +80,7 @@ export function FinancialTrendChart({
             const val = minVal + (maxVal - minVal) * pct;
             return (
               <g key={idx}>
-                <line x1={paddingLeft} y1={y} x2={width - paddingRight} y2={y} stroke="#f1f5f9" strokeWidth="1" />
+                <line x1={paddingLeft} y1={y} x2={width - paddingRight} y2={y} stroke="#334155" strokeWidth="0.5" strokeDasharray="2 2" className="opacity-30 dark:opacity-40" />
                 <text x={paddingLeft - 6} y={y + 3} textAnchor="end" className="text-[9px] fill-slate-400 font-mono">
                   {formatINR(val)}
                 </text>
@@ -95,7 +95,7 @@ export function FinancialTrendChart({
             x2={width - paddingRight}
             y2={toleranceY}
             stroke="#f87171"
-            strokeWidth="1"
+            strokeWidth="1.5"
             strokeDasharray="4 3"
           />
           <text x={width - paddingRight} y={toleranceY - 4} textAnchor="end" className="text-[9px] fill-rose-500 font-medium">
@@ -103,8 +103,8 @@ export function FinancialTrendChart({
           </text>
 
           {/* Lines */}
-          <polyline fill="none" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" points={exposurePoints} />
-          <polyline fill="none" stroke="#d97706" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" points={ealPoints} />
+          <polyline fill="none" stroke="#2563eb" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" points={exposurePoints} />
+          <polyline fill="none" stroke="#d97706" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" points={ealPoints} />
 
           {/* Interactive hover points */}
           {data.map((d, i) => (
@@ -145,7 +145,7 @@ export function FinancialTrendChart({
       </div>
 
       {/* Legend */}
-      <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-[11px] text-slate-600">
+      <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-600 dark:text-slate-400">
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-blue-600 inline-block" />
