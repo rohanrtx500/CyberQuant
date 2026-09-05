@@ -50,7 +50,7 @@ def root():
         "platform": "CyberQuant AI",
         "organization": "Aegis FinServe Ltd.",
         "status": "Operational",
-        "problem_statement": "SIH26105",
+        "edition": "Enterprise Suite",
         "documentation": "/docs"
     }
 

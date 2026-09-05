@@ -46,7 +46,7 @@ export function Topbar() {
         </div>
       </div>
 
-      {/* Right: Theme Toggle, Timestamp, Prototype Badge, Persona Switcher */}
+      {/* Right: Theme Toggle, Timestamp, Persona Switcher */}
       <div className="flex items-center space-x-3">
         {/* Theme Switcher Button */}
         <button
@@ -70,11 +70,6 @@ export function Topbar() {
         <div className="flex items-center space-x-1 text-xs text-slate-500 dark:text-slate-400 font-mono">
           <Clock className="w-3.5 h-3.5 text-slate-400" />
           <span className="text-[11px]">05-Sep-2026 21:30 IST</span>
-        </div>
-
-        <div className="flex items-center space-x-1 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 text-amber-800 dark:text-amber-300 px-2 py-0.5 rounded text-[11px] font-medium">
-          <Shield className="w-3 h-3 text-amber-600 dark:text-amber-400" />
-          <span>SIH26105 Prototype</span>
         </div>
 
         <div className="flex items-center space-x-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-2 py-1 rounded-md">

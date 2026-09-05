@@ -146,7 +146,7 @@ export default function ReportsPage() {
 
             {/* Modal Footer */}
             <div className="p-3 border-t border-slate-200 bg-white flex items-center justify-between text-[11px] text-slate-500">
-              <span>Verified for Aegis FinServe Board of Directors · SIH 2026</span>
+              <span>Verified for Aegis FinServe Board of Directors · Confidential Enterprise Briefing</span>
               <button
                 onClick={() => setPreviewData(null)}
                 className="text-xs text-slate-700 hover:text-slate-900 font-semibold px-3 py-1"

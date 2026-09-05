@@ -85,7 +85,7 @@ export function Sidebar() {
           <ShieldCheck className="w-3.5 h-3.5 text-blue-400" />
           <span>Continuous Quantification</span>
         </div>
-        <div className="mt-1 text-[10px] text-slate-500">Problem Statement SIH26105</div>
+        <div className="mt-1 text-[10px] text-slate-500">Enterprise Risk Intelligence</div>
       </div>
     </aside>
   );

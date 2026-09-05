@@ -5,7 +5,7 @@ import { Topbar } from "@/components/layout/Topbar";
 
 export const metadata: Metadata = {
   title: "CyberQuant AI - Continuous Cyber Risk Quantification",
-  description: "Enterprise Financial Cyber Risk Quantification & Investment Optimization Platform (SIH26105)",
+  description: "Enterprise Financial Cyber Risk Quantification & Investment Optimization Platform",
 };
 
 export default function RootLayout({
