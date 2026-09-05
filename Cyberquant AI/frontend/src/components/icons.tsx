@@ -358,3 +358,18 @@ export const Printer = baseIcon(
     <rect width="12" height="8" x="6" y="14" />
   </>
 );
+
+export const Lock = baseIcon(
+  <>
+    <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+  </>
+);
+
+export const Briefcase = baseIcon(
+  <>
+    <rect width="20" height="14" x="2" y="7" rx="2" ry="2" />
+    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+  </>
+);
+

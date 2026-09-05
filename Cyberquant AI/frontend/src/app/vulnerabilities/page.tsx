@@ -6,6 +6,7 @@ import { VulnerabilityItem } from "@/lib/types";
 import { formatINR, formatLikelihood } from "@/lib/formatters";
 import { Badge } from "@/components/ui/Badge";
 import { Bug, CheckCircle2, AlertCircle, ShieldAlert, Sparkles, Filter } from "@/components/icons";
+import { RoleNotice } from "@/components/ui/RoleNotice";
 
 export default function VulnerabilitiesPage() {
   const [vulns, setVulns] = useState<VulnerabilityItem[]>([]);
@@ -28,7 +29,12 @@ export default function VulnerabilitiesPage() {
   }, [onlyMaterial]);
 
   return (
-    <div className="space-y-4 max-w-7xl mx-auto pb-8">
+    <RoleNotice
+      moduleName="Vulnerabilities"
+      recommendedRole="Security Analyst"
+      reason="Executive Board and CFO personas review aggregate financial risk exposure rather than low-level CVE registries. Technical vulnerability prioritization is managed by SecOps."
+    >
+      <div className="space-y-4 max-w-7xl mx-auto pb-8">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-lg border border-slate-200/90 shadow-xs">
         <div>
@@ -142,5 +148,6 @@ export default function VulnerabilitiesPage() {
         </div>
       </div>
     </div>
-  );
+  </RoleNotice>
+);
 }

@@ -8,6 +8,7 @@ import { MetricCard } from "@/components/ui/MetricCard";
 import { SpendVsRiskCurve } from "@/components/charts/SpendVsRiskCurve";
 import { Badge } from "@/components/ui/Badge";
 import { Target, CheckCircle2, DollarSign, ArrowRight, ShieldCheck, Sparkles } from "@/components/icons";
+import { RoleNotice } from "@/components/ui/RoleNotice";
 
 export default function OptimizerPage() {
   const [budget, setBudget] = useState<number>(10000000); // ₹1 Crore default
@@ -31,7 +32,12 @@ export default function OptimizerPage() {
   }, []);
 
   return (
-    <div className="space-y-4 max-w-7xl mx-auto pb-8">
+    <RoleNotice
+      moduleName="Investment Optimizer"
+      recommendedRole="Executive"
+      reason="Cybersecurity capital budget allocation (₹1.00 Cr) and 0/1 Knapsack portfolio selection are governed by executive leadership (CISO, CFO, and Executive Board). Operational SecOps teams view approved remediations in read-only mode."
+    >
+      <div className="space-y-4 max-w-7xl mx-auto pb-8">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-lg border border-slate-200/90 shadow-xs">
         <div>
@@ -245,6 +251,7 @@ export default function OptimizerPage() {
           )}
         </>
       )}
-    </div>
+      </div>
+    </RoleNotice>
   );
 }

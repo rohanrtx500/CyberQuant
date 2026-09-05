@@ -2,9 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import { Building2, RefreshCw, Shield, User, Clock, CheckCircle2, Sun, Moon } from "@/components/icons";
+import { useRole, UserRole, ROLE_CONFIGS } from "@/context/RoleContext";
 
 export function Topbar() {
-  const [activeRole, setActiveRole] = useState("CISO");
+  const { role, setRole, config } = useRole();
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
@@ -67,23 +68,30 @@ export function Topbar() {
           )}
         </button>
 
-        <div className="flex items-center space-x-1 text-xs text-slate-500 dark:text-slate-400 font-mono">
+        <div className="hidden lg:flex items-center space-x-1 text-xs text-slate-500 dark:text-slate-400 font-mono">
           <Clock className="w-3.5 h-3.5 text-slate-400" />
           <span className="text-[11px]">05-Sep-2026 21:30 IST</span>
         </div>
 
-        <div className="flex items-center space-x-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-2 py-1 rounded-md">
+        {/* Active Role Persona Badge */}
+        <div className={`hidden sm:flex items-center space-x-1.5 px-2.5 py-1 rounded-md border text-[11px] font-semibold transition-all ${config.badgeColor}`}>
+          <span className={`w-2 h-2 rounded-full ${config.dotColor}`}></span>
+          <span>{config.badgeLabel}</span>
+        </div>
+
+        {/* Persona Switcher Dropdown */}
+        <div className="flex items-center space-x-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-2.5 py-1 rounded-md shadow-xs">
           <User className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
-          <span className="text-[11px] text-slate-500 dark:text-slate-400">View:</span>
+          <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Role:</span>
           <select
-            value={activeRole}
-            onChange={(e) => setActiveRole(e.target.value)}
-            className="text-xs font-semibold text-slate-700 dark:text-slate-200 bg-transparent border-none focus:outline-none cursor-pointer"
+            value={role}
+            onChange={(e) => setRole(e.target.value as UserRole)}
+            className="text-xs font-semibold text-slate-800 dark:text-slate-100 bg-transparent border-none focus:outline-none cursor-pointer"
           >
             <option value="CISO" className="dark:bg-slate-900">CISO</option>
-            <option value="Risk Officer" className="dark:bg-slate-900">Risk Officer</option>
-            <option value="Executive" className="dark:bg-slate-900">Executive Board</option>
-            <option value="Security Analyst" className="dark:bg-slate-900">Security Analyst</option>
+            <option value="Executive" className="dark:bg-slate-900">Executive Board & CFO</option>
+            <option value="Risk Officer" className="dark:bg-slate-900">Risk Officer (CRO)</option>
+            <option value="Security Analyst" className="dark:bg-slate-900">Security Analyst (SecOps)</option>
           </select>
         </div>
       </div>

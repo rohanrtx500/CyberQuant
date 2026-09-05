@@ -5,6 +5,7 @@ import { api } from "@/lib/api";
 import { ReportCard } from "@/lib/types";
 import { Badge } from "@/components/ui/Badge";
 import { FileText, Download, Eye, X, Printer, CheckCircle2, Shield } from "@/components/icons";
+import { RoleNotice } from "@/components/ui/RoleNotice";
 
 export default function ReportsPage() {
   const [reports, setReports] = useState<ReportCard[]>([]);
@@ -39,7 +40,12 @@ export default function ReportsPage() {
   };
 
   return (
-    <div className="space-y-4 max-w-7xl mx-auto pb-8">
+    <RoleNotice
+      moduleName="Reports"
+      recommendedRole="Executive"
+      reason="Board Briefings, C-Suite financial exposure memos, and regulatory filing packages are curated for executive leadership and the CISO."
+    >
+      <div className="space-y-4 max-w-7xl mx-auto pb-8">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-lg border border-slate-200/90 shadow-xs">
         <div>
@@ -157,6 +163,7 @@ export default function ReportsPage() {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </RoleNotice>
   );
 }
