@@ -29,6 +29,7 @@ import {
   FALLBACK_OPTIMIZATION,
   FALLBACK_COMPLIANCE_ITEMS,
   FALLBACK_COMPLIANCE_POSTURE,
+  FALLBACK_SIMULATION,
   FALLBACK_REPORTS
 } from "./fallbackData";
 
@@ -116,24 +117,10 @@ export const api = {
   },
 
   simulateScenario: async (req: SimulationRequest) => {
-    const fallbackSim: SimulationResponse = {
-      scenario_id: "sim-fallback",
-      baseline_exposure: 84200000.0,
-      simulated_exposure: 51200000.0,
-      risk_reduction_amount: 33000000.0,
-      risk_reduction_percentage: 39.2,
-      applied_controls: ["MFA Enforced", "Critical Patching applied", "EDR expanded"],
-      simulation_breakdown: {
-        downtime_loss: 24000000.0,
-        breach_response_cost: 14000000.0,
-        regulatory_fines: 9000000.0,
-        reputational_data_recovery: 4200000.0
-      }
-    };
     return fetchJSON<SimulationResponse>(`${API_BASE}/simulate`, {
       method: "POST",
       body: JSON.stringify(req)
-    }, fallbackSim);
+    }, FALLBACK_SIMULATION);
   },
 
   optimizeInvestments: async (budget: number) => {
@@ -144,19 +131,20 @@ export const api = {
   },
 
   getInitiatives: async () => {
-    return fetchJSON<SecurityInitiative[]>(`${API_BASE}/optimizer/initiatives`, undefined, FALLBACK_OPTIMIZATION.recommended_portfolio);
+    return fetchJSON<SecurityInitiative[]>(`${API_BASE}/optimizer/initiatives`, undefined, FALLBACK_OPTIMIZATION.selected_initiatives);
   },
 
   queryCopilot: async (query: string) => {
     const fallbackCopilot: CopilotQueryResponse = {
       query,
-      answer: `Based on current Aegis FinServe telemetry, total financial risk exposure stands at ₹8.42 Crores across 18 production systems. The highest financial exposure resides on the Payment Gateway Server (₹2.40 Cr) due to active CISA KEV weaponized vulnerabilities (CVE-2024-38077). Recommended immediate action: Execute ₹96 Lakhs knapsack-optimized portfolio to mitigate ₹4.60 Cr in risk (379% ROSI).`,
-      sources: ["telemetry_engine", "monte_carlo_loss_model", "knapsack_optimizer"],
-      suggested_next_questions: [
-        "What is our 95% Value at Risk (VaR)?",
-        "How much risk can we eliminate under ₹50 Lakhs budget?",
-        "What are our active RBI compliance gaps?"
-      ]
+      short_answer: `Based on current Aegis FinServe telemetry, total financial risk exposure stands at ₹8.42 Crores across 18 production systems. The highest financial exposure resides on the Payment Gateway Server (₹2.40 Cr) due to active CISA KEV weaponized vulnerabilities (CVE-2024-38077).`,
+      financial_impact: "Expected Annual Loss: ₹3.17 Cr | Value at Risk (95%): ₹5.80 Cr",
+      top_drivers: [
+        "Payment Gateway Server & Customer DB generate 51% of gross risk exposure",
+        "4 weaponized CISA KEV vulnerabilities unpatched past SLA"
+      ],
+      recommended_action: "Execute ₹96 Lakhs knapsack-optimized portfolio to mitigate ₹4.60 Cr in risk (379% ROSI).",
+      source_tags: ["Source: Telemetry Data Hub", "Source: CISA KEV Feed", "Source: Monte Carlo Engine"]
     };
     return fetchJSON<CopilotQueryResponse>(`${API_BASE}/copilot/query`, {
       method: "POST",

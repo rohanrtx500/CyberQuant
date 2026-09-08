@@ -8,6 +8,7 @@ import {
   VulnerabilityItem,
   AssetRiskAnalysis,
   OptimizationResponse,
+  SimulationResponse,
   ComplianceItem,
   CompliancePostureSummary,
   ReportCard,
@@ -27,10 +28,10 @@ export const FALLBACK_KPI: KPISummary = {
 };
 
 export const FALLBACK_DISTRIBUTION: RiskDistribution = {
-  downtime_loss: 38200000.0,
-  breach_response_cost: 21500000.0,
-  regulatory_fines: 16800000.0,
-  reputational_data_recovery: 7700000.0
+  critical_percent: 22,
+  high_percent: 39,
+  medium_percent: 28,
+  low_percent: 11
 };
 
 export const FALLBACK_CONTRIBUTORS: TopRiskContributor[] = [
@@ -38,85 +39,93 @@ export const FALLBACK_CONTRIBUTORS: TopRiskContributor[] = [
     asset_id: "asset-01",
     asset_name: "Payment Gateway Server",
     business_unit: "Payments",
-    financial_exposure: 24000000.0,
-    expected_annual_loss: 9200000.0,
-    risk_score: 88,
-    primary_driver: "Active KEV Weaponization (CVE-2024-38077)"
+    primary_risk_driver: "Active KEV Weaponization (CVE-2024-38077)",
+    incident_likelihood: 0.384,
+    expected_loss: 9200000.0,
+    risk_trend: "+4.2%",
+    status: "Action Required"
   },
   {
     asset_id: "asset-02",
     asset_name: "Customer Core Database",
     business_unit: "Retail Banking",
-    financial_exposure: 18500000.0,
-    expected_annual_loss: 6800000.0,
-    risk_score: 81,
-    primary_driver: "OpenSSH RCE & Lack of MFA"
+    primary_risk_driver: "OpenSSH RCE & Lack of MFA",
+    incident_likelihood: 0.367,
+    expected_loss: 6800000.0,
+    risk_trend: "+2.1%",
+    status: "Elevated Risk"
   },
   {
     asset_id: "asset-03",
     asset_name: "IAM Privileged Directory",
     business_unit: "Corporate IT",
-    financial_exposure: 14200000.0,
-    expected_annual_loss: 5400000.0,
-    risk_score: 79,
-    primary_driver: "Outlook Moniker Link RCE"
+    primary_risk_driver: "Outlook Moniker Link RCE",
+    incident_likelihood: 0.380,
+    expected_loss: 5400000.0,
+    risk_trend: "+1.8%",
+    status: "Action Required"
   },
   {
     asset_id: "asset-04",
     asset_name: "Cloud Production Cluster",
     business_unit: "Cloud Infrastructure",
-    financial_exposure: 9500000.0,
-    expected_annual_loss: 3800000.0,
-    risk_score: 74,
-    primary_driver: "PHP CGI Argument Injection"
+    primary_risk_driver: "PHP CGI Argument Injection",
+    incident_likelihood: 0.295,
+    expected_loss: 3800000.0,
+    risk_trend: "-0.5%",
+    status: "Monitored"
   },
   {
     asset_id: "asset-05",
     asset_name: "Core Banking API Gateway",
     business_unit: "Retail Banking",
-    financial_exposure: 8200000.0,
-    expected_annual_loss: 2900000.0,
-    risk_score: 71,
-    primary_driver: "FortiOS Out-of-Bounds Write"
+    primary_risk_driver: "FortiOS Out-of-Bounds Write",
+    incident_likelihood: 0.260,
+    expected_loss: 2900000.0,
+    risk_trend: "-1.2%",
+    status: "Monitored"
   }
 ];
 
 export const FALLBACK_OPPORTUNITIES: RiskReductionOpportunity[] = [
   {
     id: "init-02",
-    name: "Emergency Critical CVE Patching Program",
+    action_title: "Emergency Critical CVE Patching Program",
     category: "Vulnerability Management",
-    cost: 800000.0,
+    estimated_cost: 800000.0,
     estimated_risk_reduction: 16500000.0,
+    priority: "Critical",
     rosi_percentage: 1962.0,
-    implementation_days: 7
+    applicable_asset: "Payment Gateway & DB"
   },
   {
     id: "init-01",
-    name: "Enterprise MFA Enforcement for Privileged Accounts",
+    action_title: "Enterprise MFA Enforcement for Privileged Accounts",
     category: "Identity & Access",
-    cost: 1200000.0,
+    estimated_cost: 1200000.0,
     estimated_risk_reduction: 14000000.0,
+    priority: "Critical",
     rosi_percentage: 1066.0,
-    implementation_days: 14
+    applicable_asset: "IAM Directory"
   },
   {
     id: "init-04",
-    name: "Micro-segmentation for Payment & Core Banking Network",
+    action_title: "Micro-segmentation for Payment & Core Banking Network",
     category: "Network Architecture",
-    cost: 3100000.0,
+    estimated_cost: 3100000.0,
     estimated_risk_reduction: 11000000.0,
+    priority: "High",
     rosi_percentage: 254.0,
-    implementation_days: 45
+    applicable_asset: "Payment Subnets"
   }
 ];
 
 export const FALLBACK_TREND: FinancialTrendPoint[] = [
-  { date: "08-Aug", exposure: 96000000.0, target_threshold: 70000000.0 },
-  { date: "15-Aug", exposure: 93500000.0, target_threshold: 70000000.0 },
-  { date: "22-Aug", exposure: 89000000.0, target_threshold: 70000000.0 },
-  { date: "29-Aug", exposure: 86200000.0, target_threshold: 70000000.0 },
-  { date: "05-Sep", exposure: 84200000.0, target_threshold: 70000000.0 }
+  { date: "08-Aug", exposure: 96000000.0, eal: 38000000.0, tolerance_threshold: 70000000.0 },
+  { date: "15-Aug", exposure: 93500000.0, eal: 36200000.0, tolerance_threshold: 70000000.0 },
+  { date: "22-Aug", exposure: 89000000.0, eal: 34100000.0, tolerance_threshold: 70000000.0 },
+  { date: "29-Aug", exposure: 86200000.0, eal: 32800000.0, tolerance_threshold: 70000000.0 },
+  { date: "05-Sep", exposure: 84200000.0, eal: 31700000.0, tolerance_threshold: 70000000.0 }
 ];
 
 export const FALLBACK_ASSETS: AssetDetail[] = [
@@ -217,30 +226,18 @@ export const FALLBACK_VULNERABILITIES: VulnerabilityItem[] = [
 export const FALLBACK_RISK_ANALYSIS: AssetRiskAnalysis = {
   asset_id: "asset-01",
   asset_name: "Payment Gateway Server",
-  business_unit: "Payments",
-  criticality: "Critical",
-  internet_exposed: true,
-  financial_exposure: 24000000.0,
-  expected_annual_loss: 9200000.0,
+  asset_criticality: "Critical",
   incident_likelihood: 0.384,
+  control_effectiveness: 0.58,
+  financial_impact: 24000000.0,
+  expected_annual_loss: 9200000.0,
   var_95: 18500000.0,
-  downtime_cost_per_hour: 320000.0,
-  formula_breakdown: {
-    base_likelihood: 0.22,
-    cve_multiplier: 1.45,
-    exposure_multiplier: 1.2,
-    control_mitigation_factor: 0.42,
-    calculated_likelihood: 0.384,
-    max_single_event_loss: 24000000.0,
-    expected_annual_loss: 9200000.0
-  },
-  monte_carlo_distribution: {
-    downtime_loss: 4200000.0,
-    breach_response_cost: 2600000.0,
-    regulatory_fines: 1800000.0,
-    reputational_data_recovery: 600000.0
-  },
-  shap_drivers: [
+  downtime_loss: 4200000.0,
+  breach_response_loss: 2600000.0,
+  regulatory_penalties: 1800000.0,
+  data_recovery_loss: 600000.0,
+  formula_explanation: "Calculated via continuous Bayesian threat likelihood combined with Monte Carlo loss severity modeling over 10,000 simulations.",
+  risk_drivers: [
     {
       feature_name: "Active KEV Exploit Weaponization",
       contribution_percentage: 28.4,
@@ -257,7 +254,7 @@ export const FALLBACK_RISK_ANALYSIS: AssetRiskAnalysis = {
       feature_name: "Critical Asset Financial Valuation",
       contribution_percentage: 18.6,
       impact_direction: "increases_risk",
-      description: "Processes ₹45+ Cr daily transaction volume with high per-hour business outage penalty (₹3.2L/hr)."
+      description: "Processes transaction volume with high per-hour business outage penalty."
     }
   ]
 };
@@ -265,16 +262,26 @@ export const FALLBACK_RISK_ANALYSIS: AssetRiskAnalysis = {
 export const FALLBACK_OPTIMIZATION: OptimizationResponse = {
   budget: 10000000.0,
   total_spend: 9600000.0,
-  total_risk_reduction: 46000000.0,
-  overall_rosi_percentage: 379.0,
-  recommended_portfolio: [
+  estimated_risk_reduction: 46000000.0,
+  post_mitigation_exposure: 38200000.0,
+  rosi_percentage: 379.0,
+  recommended_spend_zone_min: 8000000.0,
+  recommended_spend_zone_max: 12000000.0,
+  spend_curve: [
+    { spend: 2000000.0, risk_reduction: 16500000.0, remaining_exposure: 67700000.0 },
+    { spend: 5000000.0, risk_reduction: 30500000.0, remaining_exposure: 53700000.0 },
+    { spend: 9600000.0, risk_reduction: 46000000.0, remaining_exposure: 38200000.0 },
+    { spend: 15000000.0, risk_reduction: 52000000.0, remaining_exposure: 32200000.0 }
+  ],
+  selected_initiatives: [
     {
       id: "init-02",
       name: "Emergency Critical CVE Patching Program",
       cost: 800000.0,
       estimated_risk_reduction: 16500000.0,
       rosi_percentage: 1962.0,
-      implementation_days: 7
+      implementation_days: 7,
+      category: "Vulnerability Management"
     },
     {
       id: "init-01",
@@ -282,7 +289,8 @@ export const FALLBACK_OPTIMIZATION: OptimizationResponse = {
       cost: 1200000.0,
       estimated_risk_reduction: 14000000.0,
       rosi_percentage: 1066.0,
-      implementation_days: 14
+      implementation_days: 14,
+      category: "Identity & Access"
     },
     {
       id: "init-04",
@@ -290,10 +298,11 @@ export const FALLBACK_OPTIMIZATION: OptimizationResponse = {
       cost: 3100000.0,
       estimated_risk_reduction: 11000000.0,
       rosi_percentage: 254.0,
-      implementation_days: 45
+      implementation_days: 45,
+      category: "Network Architecture"
     }
   ],
-  unfunded_initiatives: []
+  unselected_initiatives: []
 };
 
 export const FALLBACK_COMPLIANCE_ITEMS: ComplianceItem[] = [
@@ -324,25 +333,43 @@ export const FALLBACK_COMPLIANCE_ITEMS: ComplianceItem[] = [
 ];
 
 export const FALLBACK_COMPLIANCE_POSTURE: CompliancePostureSummary[] = [
-  { framework: "NIST CSF 2.0", compliance_percentage: 76, active_gaps: 2, total_controls: 12 },
-  { framework: "RBI Cyber Security Framework", compliance_percentage: 82, active_gaps: 1, total_controls: 10 },
-  { framework: "SEBI CSCRF", compliance_percentage: 88, active_gaps: 0, total_controls: 8 },
-  { framework: "ISO/IEC 27001", compliance_percentage: 84, active_gaps: 1, total_controls: 15 }
+  { framework: "NIST CSF 2.0", compliance_score: 76, compliant_count: 9, partial_count: 1, gap_count: 2, total_controls: 12 },
+  { framework: "RBI Cyber Security Framework", compliance_score: 82, compliant_count: 8, partial_count: 1, gap_count: 1, total_controls: 10 },
+  { framework: "SEBI CSCRF", compliance_score: 88, compliant_count: 7, partial_count: 1, gap_count: 0, total_controls: 8 },
+  { framework: "ISO/IEC 27001", compliance_score: 84, compliant_count: 12, partial_count: 2, gap_count: 1, total_controls: 15 }
 ];
 
 export const FALLBACK_SIMULATION: SimulationResponse = {
-  scenario_id: "sim-fallback",
   baseline_exposure: 84200000.0,
-  simulated_exposure: 51200000.0,
-  risk_reduction_amount: 33000000.0,
-  risk_reduction_percentage: 39.2,
-  applied_controls: ["MFA Enforced", "Critical Patching applied", "EDR expanded"],
-  simulation_breakdown: {
-    downtime_loss: 24000000.0,
-    breach_response_cost: 14000000.0,
-    regulatory_fines: 9000000.0,
-    reputational_data_recovery: 4200000.0
-  }
+  projected_exposure: 51200000.0,
+  baseline_eal: 3170000.0,
+  projected_eal: 1850000.0,
+  risk_reduction: 33000000.0,
+  reduction_percentage: 39.2,
+  most_influential_change: "Enforce Privileged MFA (-₹1.40 Cr risk)",
+  deltas_by_asset: [
+    {
+      asset_id: "asset-01",
+      asset_name: "Payment Gateway Server",
+      baseline_loss: 9200000.0,
+      projected_loss: 4800000.0,
+      reduction_percentage: 47.8
+    },
+    {
+      asset_id: "asset-02",
+      asset_name: "Customer Core Database",
+      baseline_loss: 6800000.0,
+      projected_loss: 4100000.0,
+      reduction_percentage: 39.7
+    },
+    {
+      asset_id: "asset-03",
+      asset_name: "IAM Privileged Directory",
+      baseline_loss: 5400000.0,
+      projected_loss: 2900000.0,
+      reduction_percentage: 46.3
+    }
+  ]
 };
 
 export const FALLBACK_REPORTS: ReportCard[] = [
@@ -358,6 +385,6 @@ export const FALLBACK_REPORTS: ReportCard[] = [
       "Value at Risk (95%)": "₹5.80 Cr",
       "Enterprise Risk Score": "72 / 100"
     },
-    "file_size": "1.8 MB"
+    file_size: "1.8 MB"
   }
 ];
