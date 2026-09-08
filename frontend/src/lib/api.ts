@@ -35,6 +35,212 @@ import {
 
 const API_BASE = "/api";
 
+export function computeDynamicSimulation(req: SimulationRequest): SimulationResponse {
+  const baseline_exposure = 84200000.0;
+  const baseline_eal = 31700000.0;
+
+  let exposureReduction = 0;
+  let ealReduction = 0;
+
+  if (req.mfa_privileged) {
+    exposureReduction += 14000000.0;
+    ealReduction += 5200000.0;
+  }
+  if (req.patch_critical) {
+    exposureReduction += 16500000.0;
+    ealReduction += 6800000.0;
+  }
+  if (req.edr_coverage_percent > 74) {
+    const edrDiff = req.edr_coverage_percent - 74;
+    exposureReduction += edrDiff * 250000.0;
+    ealReduction += edrDiff * 90000.0;
+  }
+  if (req.network_segmentation) {
+    exposureReduction += 11000000.0;
+    ealReduction += 4100000.0;
+  }
+  if (req.backup_resilience) {
+    exposureReduction += 7500000.0;
+    ealReduction += 2800000.0;
+  }
+
+  // Delay penalty
+  const delayPenalty = (req.delay_remediation_days || 0) * 600000.0;
+  const delayEalPenalty = (req.delay_remediation_days || 0) * 220000.0;
+
+  const netReduction = Math.max(0, exposureReduction - delayPenalty);
+  const netEalReduction = Math.max(0, ealReduction - delayEalPenalty);
+
+  const projected_exposure = Math.max(12000000.0, baseline_exposure - netReduction);
+  const projected_eal = Math.max(4500000.0, baseline_eal - netEalReduction);
+  const risk_reduction = baseline_exposure - projected_exposure;
+  const reduction_percentage = Number(((risk_reduction / baseline_exposure) * 100).toFixed(1));
+
+  let most_influential_change = "Baseline Status Quo (No intervention active)";
+  if (req.patch_critical) {
+    most_influential_change = "Emergency Critical Patching (-₹1.65 Cr risk)";
+  } else if (req.mfa_privileged) {
+    most_influential_change = "Privileged MFA Enforcement (-₹1.40 Cr risk)";
+  } else if (req.network_segmentation) {
+    most_influential_change = "Payment Network Micro-segmentation (-₹1.10 Cr risk)";
+  } else if (req.backup_resilience) {
+    most_influential_change = "Air-Gapped Immutable Backup Vault (-₹75.0 Lakhs risk)";
+  } else if (req.edr_coverage_percent > 74) {
+    most_influential_change = `EDR Expansion to ${req.edr_coverage_percent}% (-₹${((req.edr_coverage_percent - 74) * 0.025).toFixed(2)} Cr risk)`;
+  } else if (req.delay_remediation_days > 0) {
+    most_influential_change = `SLA Delay Penalty (+₹${(req.delay_remediation_days * 0.06).toFixed(2)} Cr added liability)`;
+  }
+
+  const asset1Baseline = 9200000.0;
+  const asset1Projected = Math.max(1800000.0, asset1Baseline - (req.patch_critical ? 4200000 : 0) - (req.mfa_privileged ? 2100000 : 0));
+
+  const asset2Baseline = 6800000.0;
+  const asset2Projected = Math.max(1400000.0, asset2Baseline - (req.mfa_privileged ? 2900000 : 0) - (req.backup_resilience ? 1500000 : 0));
+
+  const asset3Baseline = 5400000.0;
+  const asset3Projected = Math.max(1100000.0, asset3Baseline - (req.mfa_privileged ? 3100000 : 0) - (req.network_segmentation ? 1200000 : 0));
+
+  return {
+    baseline_exposure,
+    projected_exposure,
+    baseline_eal,
+    projected_eal,
+    risk_reduction,
+    reduction_percentage,
+    most_influential_change,
+    deltas_by_asset: [
+      {
+        asset_id: "asset-01",
+        asset_name: "Payment Gateway Server",
+        baseline_loss: asset1Baseline,
+        projected_loss: asset1Projected,
+        reduction_percentage: Number((((asset1Baseline - asset1Projected) / asset1Baseline) * 100).toFixed(1))
+      },
+      {
+        asset_id: "asset-02",
+        asset_name: "Customer Core Database",
+        baseline_loss: asset2Baseline,
+        projected_loss: asset2Projected,
+        reduction_percentage: Number((((asset2Baseline - asset2Projected) / asset2Baseline) * 100).toFixed(1))
+      },
+      {
+        asset_id: "asset-03",
+        asset_name: "IAM Privileged Directory",
+        baseline_loss: asset3Baseline,
+        projected_loss: asset3Projected,
+        reduction_percentage: Number((((asset3Baseline - asset3Projected) / asset3Baseline) * 100).toFixed(1))
+      }
+    ]
+  };
+}
+
+const ALL_INITIATIVES: SecurityInitiative[] = [
+  {
+    id: "init-02",
+    name: "Emergency Critical CVE Patching Program",
+    cost: 800000.0,
+    estimated_risk_reduction: 16500000.0,
+    rosi_percentage: 1962.0,
+    implementation_days: 7,
+    category: "Vulnerability Management"
+  },
+  {
+    id: "init-01",
+    name: "Enterprise MFA Enforcement for Privileged Accounts",
+    cost: 1200000.0,
+    estimated_risk_reduction: 14000000.0,
+    rosi_percentage: 1066.0,
+    implementation_days: 14,
+    category: "Identity & Access"
+  },
+  {
+    id: "init-04",
+    name: "Micro-segmentation for Payment & Core Banking Network",
+    cost: 3100000.0,
+    estimated_risk_reduction: 11000000.0,
+    rosi_percentage: 254.0,
+    implementation_days: 45,
+    category: "Network Architecture"
+  },
+  {
+    id: "init-05",
+    name: "Air-Gapped Immutable Backup Vault",
+    cost: 2500000.0,
+    estimated_risk_reduction: 7500000.0,
+    rosi_percentage: 200.0,
+    implementation_days: 30,
+    category: "Data Protection"
+  },
+  {
+    id: "init-03",
+    name: "Cloud Native WAF & Bot Mitigation Suite",
+    cost: 1800000.0,
+    estimated_risk_reduction: 6500000.0,
+    rosi_percentage: 261.0,
+    implementation_days: 21,
+    category: "Cloud Security"
+  },
+  {
+    id: "init-06",
+    name: "Automated EDR Patch Orchestration",
+    cost: 1500000.0,
+    estimated_risk_reduction: 5500000.0,
+    rosi_percentage: 266.0,
+    implementation_days: 14,
+    category: "Endpoint Security"
+  },
+  {
+    id: "init-07",
+    name: "Zero Trust IAM Step-Up Enforcement",
+    cost: 2200000.0,
+    estimated_risk_reduction: 7000000.0,
+    rosi_percentage: 218.0,
+    implementation_days: 28,
+    category: "Identity & Access"
+  }
+];
+
+export function computeDynamicOptimization(targetBudget: number): OptimizationResponse {
+  const sorted = [...ALL_INITIATIVES].sort((a, b) => b.rosi_percentage - a.rosi_percentage);
+
+  let currentSpend = 0;
+  let totalRiskReduction = 0;
+  const selected: SecurityInitiative[] = [];
+  const unselected: SecurityInitiative[] = [];
+
+  for (const init of sorted) {
+    if (currentSpend + init.cost <= targetBudget) {
+      currentSpend += init.cost;
+      totalRiskReduction += init.estimated_risk_reduction;
+      selected.push(init);
+    } else {
+      unselected.push(init);
+    }
+  }
+
+  const baseline_exposure = 84200000.0;
+  const post_mitigation_exposure = Math.max(10000000.0, baseline_exposure - totalRiskReduction);
+  const rosi_percentage = currentSpend > 0 ? Math.round(((totalRiskReduction - currentSpend) / currentSpend) * 100) : 0;
+
+  return {
+    budget: targetBudget,
+    total_spend: currentSpend,
+    estimated_risk_reduction: totalRiskReduction,
+    post_mitigation_exposure,
+    rosi_percentage,
+    recommended_spend_zone_min: 8000000.0,
+    recommended_spend_zone_max: 12000000.0,
+    spend_curve: [
+      { spend: 2000000.0, risk_reduction: 16500000.0, remaining_exposure: 67700000.0 },
+      { spend: 5000000.0, risk_reduction: 30500000.0, remaining_exposure: 53700000.0 },
+      { spend: currentSpend, risk_reduction: totalRiskReduction, remaining_exposure: post_mitigation_exposure },
+      { spend: 20000000.0, risk_reduction: 57500000.0, remaining_exposure: 26700000.0 }
+    ],
+    selected_initiatives: selected,
+    unselected_initiatives: unselected
+  };
+}
+
 async function fetchJSON<T>(url: string, options?: RequestInit, fallback?: T): Promise<T> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 2000);
@@ -120,18 +326,18 @@ export const api = {
     return fetchJSON<SimulationResponse>(`${API_BASE}/simulate`, {
       method: "POST",
       body: JSON.stringify(req)
-    }, FALLBACK_SIMULATION);
+    }, computeDynamicSimulation(req));
   },
 
   optimizeInvestments: async (budget: number) => {
     return fetchJSON<OptimizationResponse>(`${API_BASE}/optimize`, {
       method: "POST",
       body: JSON.stringify({ budget })
-    }, FALLBACK_OPTIMIZATION);
+    }, computeDynamicOptimization(budget));
   },
 
   getInitiatives: async () => {
-    return fetchJSON<SecurityInitiative[]>(`${API_BASE}/optimizer/initiatives`, undefined, FALLBACK_OPTIMIZATION.selected_initiatives);
+    return fetchJSON<SecurityInitiative[]>(`${API_BASE}/optimizer/initiatives`, undefined, computeDynamicOptimization(10000000).selected_initiatives);
   },
 
   queryCopilot: async (query: string) => {
