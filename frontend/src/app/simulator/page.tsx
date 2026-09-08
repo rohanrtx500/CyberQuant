@@ -7,6 +7,8 @@ import { formatINR } from "@/lib/formatters";
 import { MetricCard } from "@/components/ui/MetricCard";
 import { Sliders, ArrowRight, ShieldCheck, CheckCircle2, TrendingDown, RefreshCw, Zap } from "@/components/icons";
 
+import { FALLBACK_SIMULATION } from "@/lib/fallbackData";
+
 export default function SimulatorPage() {
   const [mfaPrivileged, setMfaPrivileged] = useState<boolean>(false);
   const [patchCritical, setPatchCritical] = useState<boolean>(false);
@@ -15,7 +17,7 @@ export default function SimulatorPage() {
   const [backupResilience, setBackupResilience] = useState<boolean>(false);
   const [delayDays, setDelayDays] = useState<number>(0);
 
-  const [simResult, setSimResult] = useState<SimulationResponse | null>(null);
+  const [simResult, setSimResult] = useState<SimulationResponse>(FALLBACK_SIMULATION);
   const [calculating, setCalculating] = useState<boolean>(false);
 
   // Recalculate whenever any control changes

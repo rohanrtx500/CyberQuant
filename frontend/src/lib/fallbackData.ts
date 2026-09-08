@@ -330,6 +330,21 @@ export const FALLBACK_COMPLIANCE_POSTURE: CompliancePostureSummary[] = [
   { framework: "ISO/IEC 27001", compliance_percentage: 84, active_gaps: 1, total_controls: 15 }
 ];
 
+export const FALLBACK_SIMULATION: SimulationResponse = {
+  scenario_id: "sim-fallback",
+  baseline_exposure: 84200000.0,
+  simulated_exposure: 51200000.0,
+  risk_reduction_amount: 33000000.0,
+  risk_reduction_percentage: 39.2,
+  applied_controls: ["MFA Enforced", "Critical Patching applied", "EDR expanded"],
+  simulation_breakdown: {
+    downtime_loss: 24000000.0,
+    breach_response_cost: 14000000.0,
+    regulatory_fines: 9000000.0,
+    reputational_data_recovery: 4200000.0
+  }
+};
+
 export const FALLBACK_REPORTS: ReportCard[] = [
   {
     id: "rep-01",

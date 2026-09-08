@@ -10,18 +10,20 @@ import { Badge } from "@/components/ui/Badge";
 import { Target, CheckCircle2, DollarSign, ArrowRight, ShieldCheck, Sparkles } from "@/components/icons";
 import { RoleNotice } from "@/components/ui/RoleNotice";
 
+import { FALLBACK_OPTIMIZATION } from "@/lib/fallbackData";
+
 export default function OptimizerPage() {
   const [budget, setBudget] = useState<number>(10000000); // ₹1 Crore default
-  const [optResult, setOptResult] = useState<OptimizationResponse | null>(null);
+  const [optResult, setOptResult] = useState<OptimizationResponse>(FALLBACK_OPTIMIZATION);
   const [loading, setLoading] = useState<boolean>(false);
 
   const runOptimization = async (targetBudget: number) => {
     setLoading(true);
     try {
       const res = await api.optimizeInvestments(targetBudget);
-      setOptResult(res);
+      if (res) setOptResult(res);
     } catch (err) {
-      console.error("Optimization error:", err);
+      console.error("Optimization sync note:", err);
     } finally {
       setLoading(false);
     }

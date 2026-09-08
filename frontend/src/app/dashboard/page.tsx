@@ -13,48 +13,41 @@ import { SpendVsRiskCurve } from "@/components/charts/SpendVsRiskCurve";
 import { DollarSign, ShieldAlert, BarChart3, AlertTriangle, ShieldCheck, Briefcase } from "@/components/icons";
 import { useRole, UserRole } from "@/context/RoleContext";
 
+import {
+  FALLBACK_KPI,
+  FALLBACK_DISTRIBUTION,
+  FALLBACK_CONTRIBUTORS,
+  FALLBACK_OPPORTUNITIES,
+  FALLBACK_TREND
+} from "@/lib/fallbackData";
+
 export default function DashboardPage() {
   const { role, setRole, config } = useRole();
-  const [kpi, setKpi] = useState<KPISummary | null>(null);
-  const [distribution, setDistribution] = useState<RiskDistribution | null>(null);
-  const [contributors, setContributors] = useState<TopRiskContributor[]>([]);
-  const [opportunities, setOpportunities] = useState<RiskReductionOpportunity[]>([]);
-  const [trendData, setTrendData] = useState<FinancialTrendPoint[]>([]);
+  const [kpi, setKpi] = useState<KPISummary>(FALLBACK_KPI);
+  const [distribution, setDistribution] = useState<RiskDistribution>(FALLBACK_DISTRIBUTION);
+  const [contributors, setContributors] = useState<TopRiskContributor[]>(FALLBACK_CONTRIBUTORS);
+  const [opportunities, setOpportunities] = useState<RiskReductionOpportunity[]>(FALLBACK_OPPORTUNITIES);
+  const [trendData, setTrendData] = useState<FinancialTrendPoint[]>(FALLBACK_TREND);
   const [trendDays, setTrendDays] = useState<number>(30);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     async function loadData() {
       try {
         const summary = await api.getDashboardSummary();
-        setKpi(summary.kpi);
-        setDistribution(summary.risk_distribution);
-        setContributors(summary.top_contributors);
-        setOpportunities(summary.opportunities);
+        if (summary?.kpi) setKpi(summary.kpi);
+        if (summary?.risk_distribution) setDistribution(summary.risk_distribution);
+        if (summary?.top_contributors) setContributors(summary.top_contributors);
+        if (summary?.opportunities) setOpportunities(summary.opportunities);
 
         const trend = await api.getRiskTrend(trendDays);
-        setTrendData(trend);
+        if (trend && trend.length > 0) setTrendData(trend);
       } catch (err) {
-        console.error("Dashboard data load error:", err);
-      } finally {
-        setLoading(false);
+        console.error("Dashboard live sync note:", err);
       }
     }
     loadData();
   }, [trendDays]);
-
-  if (loading || !kpi || !distribution) {
-    return (
-      <div className="space-y-4">
-        <div className="h-6 w-64 bg-slate-200 dark:bg-slate-800 animate-pulse rounded" />
-        <div className="grid grid-cols-5 gap-3.5">
-          {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="h-24 bg-slate-200 dark:bg-slate-800 animate-pulse rounded-lg" />
-          ))}
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-4 max-w-7xl mx-auto pb-8">

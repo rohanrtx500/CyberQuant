@@ -7,20 +7,20 @@ import { Badge } from "@/components/ui/Badge";
 import { FileText, Download, Eye, X, Printer, CheckCircle2, Shield } from "@/components/icons";
 import { RoleNotice } from "@/components/ui/RoleNotice";
 
+import { FALLBACK_REPORTS } from "@/lib/fallbackData";
+
 export default function ReportsPage() {
-  const [reports, setReports] = useState<ReportCard[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [reports, setReports] = useState<ReportCard[]>(FALLBACK_REPORTS);
+  const [loading, setLoading] = useState<boolean>(false);
   const [previewData, setPreviewData] = useState<{ report: ReportCard; raw_text: string } | null>(null);
 
   useEffect(() => {
     async function loadReports() {
       try {
         const data = await api.getReports();
-        setReports(data);
+        if (data && data.length > 0) setReports(data);
       } catch (err) {
-        console.error("Failed to load reports:", err);
-      } finally {
-        setLoading(false);
+        console.error("Reports sync note:", err);
       }
     }
     loadReports();

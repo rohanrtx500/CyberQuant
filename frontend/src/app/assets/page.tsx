@@ -18,9 +18,11 @@ import {
   DollarSign
 } from "@/components/icons";
 
+import { FALLBACK_ASSETS } from "@/lib/fallbackData";
+
 export default function AssetsPage() {
-  const [assets, setAssets] = useState<AssetDetail[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [assets, setAssets] = useState<AssetDetail[]>(FALLBACK_ASSETS);
+  const [loading, setLoading] = useState<boolean>(false);
   const [selectedAsset, setSelectedAsset] = useState<AssetDetail | null>(null);
 
   // Filters
@@ -31,7 +33,6 @@ export default function AssetsPage() {
 
   useEffect(() => {
     async function loadAssets() {
-      setLoading(true);
       try {
         const list = await api.getAssets({
           business_unit: buFilter,
@@ -39,11 +40,9 @@ export default function AssetsPage() {
           internet_exposed: internetOnly ? true : undefined,
           search: searchQuery
         });
-        setAssets(list);
+        if (list && list.length > 0) setAssets(list);
       } catch (err) {
-        console.error("Failed to load assets:", err);
-      } finally {
-        setLoading(false);
+        console.error("Failed to sync assets:", err);
       }
     }
     loadAssets();

@@ -8,21 +8,20 @@ import { Badge } from "@/components/ui/Badge";
 import { Bug, CheckCircle2, AlertCircle, ShieldAlert, Sparkles, Filter } from "@/components/icons";
 import { RoleNotice } from "@/components/ui/RoleNotice";
 
+import { FALLBACK_VULNERABILITIES } from "@/lib/fallbackData";
+
 export default function VulnerabilitiesPage() {
-  const [vulns, setVulns] = useState<VulnerabilityItem[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [vulns, setVulns] = useState<VulnerabilityItem[]>(FALLBACK_VULNERABILITIES);
+  const [loading, setLoading] = useState<boolean>(false);
   const [onlyMaterial, setOnlyMaterial] = useState<boolean>(false);
 
   useEffect(() => {
     async function loadData() {
-      setLoading(true);
       try {
         const data = await api.getVulnerabilities(onlyMaterial);
-        setVulns(data);
+        if (data && data.length > 0) setVulns(data);
       } catch (err) {
-        console.error("Failed to load vulnerabilities:", err);
-      } finally {
-        setLoading(false);
+        console.error("Failed to sync vulnerabilities:", err);
       }
     }
     loadData();

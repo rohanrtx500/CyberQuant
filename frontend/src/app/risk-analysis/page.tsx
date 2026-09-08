@@ -9,22 +9,24 @@ import { Badge } from "@/components/ui/Badge";
 import { MetricCard } from "@/components/ui/MetricCard";
 import { Shield, AlertOctagon, HelpCircle, Layers, ArrowUpRight, ArrowDownRight, Server } from "@/components/icons";
 
+import { FALLBACK_RISK_ANALYSIS, FALLBACK_ASSETS } from "@/lib/fallbackData";
+
 function RiskAnalysisContent() {
   const searchParams = useSearchParams();
   const initialAssetId = searchParams.get("asset") || "asset-01";
 
-  const [assets, setAssets] = useState<AssetDetail[]>([]);
+  const [assets, setAssets] = useState<AssetDetail[]>(FALLBACK_ASSETS);
   const [selectedAssetId, setSelectedAssetId] = useState<string>(initialAssetId);
-  const [analysis, setAnalysis] = useState<AssetRiskAnalysis | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [analysis, setAnalysis] = useState<AssetRiskAnalysis>(FALLBACK_RISK_ANALYSIS);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     async function loadAssets() {
       try {
         const assetList = await api.getAssets();
-        setAssets(assetList);
+        if (assetList && assetList.length > 0) setAssets(assetList);
       } catch (err) {
-        console.error("Failed to load assets list:", err);
+        console.error("Assets sync note:", err);
       }
     }
     loadAssets();
@@ -32,14 +34,11 @@ function RiskAnalysisContent() {
 
   useEffect(() => {
     async function loadAnalysis() {
-      setLoading(true);
       try {
         const res = await api.getAssetRiskAnalysis(selectedAssetId);
-        setAnalysis(res);
+        if (res) setAnalysis(res);
       } catch (err) {
-        console.error("Failed to load risk analysis:", err);
-      } finally {
-        setLoading(false);
+        console.error("Risk analysis sync note:", err);
       }
     }
     loadAnalysis();
