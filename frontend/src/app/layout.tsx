@@ -15,33 +15,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <head>
-        <script src="https://cdn.tailwindcss.com"></script>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              tailwind.config = {
-                darkMode: 'class',
-                theme: {
-                  extend: {
-                    colors: {
-                      brand: {
-                        50: '#eff6ff',
-                        100: '#dbeafe',
-                        500: '#3b82f6',
-                        600: '#2563eb',
-                        700: '#1d4ed8'
-                      }
-                    }
-                  }
-                }
-              }
-            `,
-          }}
-        />
-      </head>
-      <body className="text-slate-900 min-h-screen flex antialiased selection:bg-blue-200 selection:text-blue-900">
+    <html lang="en" className="h-full">
+      <body className="text-slate-900 min-h-screen flex antialiased selection:bg-blue-200 selection:text-blue-900 bg-slate-100 dark:bg-slate-950 font-sans">
         <RoleProvider>
           <Sidebar />
           <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
