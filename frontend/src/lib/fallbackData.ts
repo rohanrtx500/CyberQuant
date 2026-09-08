@@ -358,6 +358,6 @@ export const FALLBACK_REPORTS: ReportCard[] = [
       "Value at Risk (95%)": "₹5.80 Cr",
       "Enterprise Risk Score": "72 / 100"
     },
-    file_size": "1.8 MB"
+    "file_size": "1.8 MB"
   }
 ];
